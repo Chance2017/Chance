@@ -33,8 +33,8 @@ public class ItemController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/item/save", method = RequestMethod.POST)
-	private ChanceResult createItem(TbItem item, String desc) throws Exception {
-		ChanceResult result = itemService.createItem(item, desc);
+	private ChanceResult createItem(TbItem item, String desc, String itemParams) throws Exception {
+		ChanceResult result = itemService.createItem(item, desc, itemParams);
 		return result;
 	}
 	

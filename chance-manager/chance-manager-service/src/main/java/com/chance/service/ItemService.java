@@ -7,5 +7,5 @@ import com.chance.pojo.TbItem;
 public interface ItemService {
 	TbItem getItemById(long itemId);
 	EasyUIDataGridResult getItemList(int page, int rows);
-	ChanceResult createItem(TbItem item, String desc) throws Exception;
+	ChanceResult createItem(TbItem item, String desc, String itemParams) throws Exception;
 }

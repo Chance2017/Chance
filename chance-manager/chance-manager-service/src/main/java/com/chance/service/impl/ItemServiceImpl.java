@@ -11,10 +11,12 @@ import com.chance.common.pojo.EasyUIDataGridResult;
 import com.chance.common.utils.IDUtils;
 import com.chance.mapper.TbItemDescMapper;
 import com.chance.mapper.TbItemMapper;
+import com.chance.mapper.TbItemParamItemMapper;
 import com.chance.pojo.TbItem;
 import com.chance.pojo.TbItemDesc;
 import com.chance.pojo.TbItemExample;
 import com.chance.pojo.TbItemExample.Criteria;
+import com.chance.pojo.TbItemParamItem;
 import com.chance.service.ItemService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -25,6 +27,8 @@ public class ItemServiceImpl implements ItemService {
 	private TbItemMapper itemMapper;
 	@Autowired
 	private TbItemDescMapper itemDescMapper;
+	@Autowired
+	private TbItemParamItemMapper itemParamItemMapper;
 
 	@Override
 	public TbItem getItemById(long itemId) {
@@ -58,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public ChanceResult createItem(TbItem item, String desc) throws Exception {
+	public ChanceResult createItem(TbItem item, String desc, String itemParams) throws Exception {
 		// item补全
 		long itemId = IDUtils.genItemId();
 		item.setId(itemId);
@@ -75,10 +79,21 @@ public class ItemServiceImpl implements ItemService {
 		if(result.getStatus() != 200) {
 			throw new Exception();
 		}
+		// 添加商品规格参数信息
+		result = insertItemParamItem(itemId, itemParams);
+		if(result.getStatus() != 200) {
+			throw new Exception();
+		}
 		
 		return ChanceResult.ok();
 	}
 	
+	/**
+	 * 添加商品描述的富文本信息
+	 * @param itemId 商品id
+	 * @param desc 商品描述
+	 * @return
+	 */
 	private ChanceResult insertItemDesc(Long itemId, String desc) {
 		TbItemDesc itemDesc = new TbItemDesc();
 		itemDesc.setItemId(itemId);
@@ -91,5 +106,23 @@ public class ItemServiceImpl implements ItemService {
 		return ChanceResult.ok();
 	}
 	
+	/**
+	 * 添加商品规格信息
+	 * @param itemId 商品id
+	 * @param itemParam	商品规格参数信息
+	 * @return
+	 */
+	private ChanceResult insertItemParamItem(Long itemId, String itemParams) {
+		
+		TbItemParamItem itemParamItem = new TbItemParamItem();
+		itemParamItem.setItemId(itemId);
+		itemParamItem.setParamData(itemParams);
+		itemParamItem.setCreated(new Date());
+		itemParamItem.setUpdated(new Date());
+		
+		itemParamItemMapper.insert(itemParamItem);
+		
+		return ChanceResult.ok();
+	}
 	
 }

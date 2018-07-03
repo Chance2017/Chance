@@ -45,6 +45,11 @@ public class ItemServiceImpl implements ItemService {
 		return null;
 	}
 
+	/**
+	 * 获取商品列表
+	 * @param page 列表的页码
+	 * @param rows 一页多少行
+	 */
 	@Override
 	public EasyUIDataGridResult getItemList(int page, int rows) {
 		TbItemExample example = new TbItemExample();
